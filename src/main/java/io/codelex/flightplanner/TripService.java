@@ -6,7 +6,6 @@ import io.codelex.flightplanner.api.FindTripRequest;
 import io.codelex.flightplanner.api.Trip;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,16 +44,18 @@ class TripService {
     }
 
     List<Trip> search(String from, String to) {
+
         return trips.stream()
                 .filter(trip -> isAirportMatching(trip.getFrom(), from) || isAirportMatching(trip.getTo(), to))
                 .collect(Collectors.toList());
 
     }
 
+
     List<Trip> isAnyNulls(Trip trip) {
 /*return trips.stream()
         .filter(trip->)*/
-return null;
+        return null;
     }
 
 
@@ -65,13 +66,13 @@ return null;
 
     private boolean isAirportMatching(Airport airport, String search) {
         if (search != null && search.length() > 0) {
-            if (airport.getCountry().toLowerCase().contains(search.toLowerCase())) {
+            if (airport.getCountry().toLowerCase().contains(search.toLowerCase().trim())) {
                 return true;
             }
-            if (airport.getCity().toLowerCase().contains(search.toLowerCase())) {
+            if (airport.getCity().toLowerCase().contains(search.toLowerCase().trim())) {
                 return true;
             }
-            if (airport.getAirport().toLowerCase().contains(search.toLowerCase())) {
+            if (airport.getAirport().toLowerCase().contains(search.toLowerCase().trim())) {
                 return true;
             }
         }
