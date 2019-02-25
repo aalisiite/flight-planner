@@ -1,0 +1,11 @@
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+steps:
+  - script: |
+      docker build -t flight-planner:latest .
+      docker run --rm -u root flight-planner:latest build
+    displayName: 'Build'

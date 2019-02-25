@@ -52,8 +52,9 @@ class TripService {
     }
 
     List<Trip> isAnyNulls(Trip trip) {
-return trips.stream()
-        .filter(trip->trip.equals())
+/*return trips.stream()
+        .filter(trip->)*/
+return null;
     }
 
 
