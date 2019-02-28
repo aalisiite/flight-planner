@@ -9,13 +9,14 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 
 @Component
 class TripService {
     private final List<Trip> trips = new ArrayList<>();
-    private Long sequence = 1L;
+    private AtomicLong sequence = new AtomicLong(1L);
 
     synchronized Trip addTrip(AddTripRequest request) {
 
@@ -27,9 +28,7 @@ class TripService {
             throw new IllegalStateException();
         }
 
-        if (request.getFrom().getCity().toLowerCase().trim().equals(request.getTo().getCity().toLowerCase().trim())
-                && request.getFrom().getCountry().toLowerCase().trim().equals(request.getTo().getCountry().toLowerCase().trim())
-                && request.getFrom().getAirport().toLowerCase().trim().equals(request.getTo().getAirport().toLowerCase().trim())) {
+        if (request.getFrom().getAirport().toLowerCase().trim().equals(request.getTo().getAirport().toLowerCase().trim())) {
             throw new IllegalArgumentException();
         }
         if (request.getDepartureTime().equals(request.getArrivalTime())
@@ -38,7 +37,7 @@ class TripService {
         }
 
         Trip trip = new Trip(
-                sequence++,
+                sequence.incrementAndGet(),
                 request.getFrom(),
                 request.getTo(),
                 request.getCarrier(),

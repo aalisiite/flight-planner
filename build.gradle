@@ -33,3 +33,9 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}

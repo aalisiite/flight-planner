@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,19 +42,16 @@ class TripServiceTest {
     void should_increment_id_when_adding_new_flight() {
         //given
         AddTripRequest request = createRequest();
-
-        //when
         Trip firstFlight = service.addTrip(request);
-
+        //when
         AddTripRequest request1 = new AddTripRequest(
                 new Airport("Latvia", "Riga", "RIX"),
                 new Airport("Emirates", "Dubai", "DXB"),
                 "Ryanair",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now().plusHours(5)
         );
         Trip secondFlight = service.addTrip(request1);
-
         //then
         assertEquals(firstFlight.getId() + 1, secondFlight.getId());
     }
@@ -93,12 +91,13 @@ class TripServiceTest {
     void should_be_able_to_delete_flight_by_id() {
         //given
         AddTripRequest request = createRequest();
-        //when
         Trip trip = service.addTrip(request);
+        //when
         service.deleteById(trip.getId());
         //then
-        trip = service.findById(trip.getId());
-        assertNull(trip);
+        Assertions.assertThrows(NoSuchElementException.class, () ->
+                service.findById(trip.getId())
+        );
     }
 
     @Test
@@ -266,7 +265,7 @@ class TripServiceTest {
         AddTripRequest request = createRequest();
         service.addTrip(request);
         //when
-        List<Trip> trips = service.findFlights(createRequestOther());
+        List<Trip> trips = service.search("Riga", null);
         //then
         Assertions.assertEquals(1, trips.size());
     }
@@ -315,15 +314,16 @@ class TripServiceTest {
         AddTripRequest request = createRequest();
         service.addTrip(request);
         //when
-        List<Trip> trips = service.findFlights(new FindTripRequest(
-                new Airport("Latvia", "Riga", "RIX"),
-                new Airport("Latvia", "Riga", "RIX"),
-                LocalDate.of(2019, 1, 1),
-                LocalDate.of(2019, 2, 2)));
+        
         //then
-        Assertions.assertEquals(trips.size(), 0);
+        Assertions.assertThrows(IllegalStateException.class, () ->
+                service.findFlights(new FindTripRequest(
+                        new Airport("Latvia", "Riga", "RIX"),
+                        new Airport("Latvia", "Riga", "RIX"),
+                        LocalDate.of(2019, 1, 1),
+                        LocalDate.of(2019, 2, 2))));
     }
-    
+
     private AddTripRequest createRequest() {
         return new AddTripRequest(
                 new Airport("Latvia", "Riga", "RIX"),
