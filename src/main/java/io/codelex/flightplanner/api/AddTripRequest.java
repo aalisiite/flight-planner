@@ -11,22 +11,21 @@ public class AddTripRequest {
     private final Airport from;
     private final Airport to;
     private final String carrier;
-    private final LocalDateTime departure;
-    private final LocalDateTime arrival;
+    private final LocalDateTime departureTime;
+    private final LocalDateTime arrivalTime;
 
 
     @JsonCreator
     public AddTripRequest(@JsonProperty("from") Airport from,
                           @JsonProperty("to") Airport to,
                           @JsonProperty("carrier") String carrier,
-                          @JsonProperty("departure") LocalDateTime departure,
-                          @JsonProperty("arrival") LocalDateTime arrival) {
+                          @JsonProperty("departureTime") LocalDateTime departure,
+                          @JsonProperty("arrivalTime") LocalDateTime arrival) {
         this.from = from;
         this.to = to;
         this.carrier = carrier;
-        this.departure = departure;
-        this.arrival = arrival;
-
+        this.departureTime = departure;
+        this.arrivalTime = arrival;
     }
 
     public Airport getFrom() {
@@ -41,11 +40,11 @@ public class AddTripRequest {
         return carrier;
     }
 
-    public LocalDateTime getDeparture() {
-        return departure;
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
     }
 
-    public LocalDateTime getArrival() {
-        return arrival;
+    public LocalDateTime getArrivalTime() {
+        return arrivalTime;
     }
 }

@@ -23,15 +23,6 @@ public class FindTripRequest {
     }
 
 
-    public void setFrom(Airport from) {
-        this.from = from;
-    }
-
-    public void setTo(Airport to) {
-        this.to = to;
-    }
-
-
     public Airport getFrom() {
         return from;
     }

@@ -14,6 +14,6 @@ public class TestingController {
 
     @PostMapping("/clear")
     public void clear() {
-
+        tripService.clear();
     }
 }

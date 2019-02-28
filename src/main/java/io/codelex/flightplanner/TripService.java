@@ -6,18 +6,47 @@ import io.codelex.flightplanner.api.FindTripRequest;
 import io.codelex.flightplanner.api.Trip;
 import org.springframework.stereotype.Component;
 
+import java.time.DateTimeException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 @Component
 class TripService {
     private final List<Trip> trips = new ArrayList<>();
     private Long sequence = 1L;
 
-    Trip addTrip(AddTripRequest request) {
+    synchronized Trip addTrip(AddTripRequest request) {
+
+        if (request.getFrom() == null
+                || request.getTo() == null
+                || request.getDepartureTime() == null
+                || request.getArrivalTime() == null
+                || request.getCarrier() == null
+                || request.getCarrier().equals("")
+                || request.getFrom().equals(new Airport(null, null, null))
+                || request.getTo().equals(new Airport(null, null, null))
+                || request.getFrom().equals(new Airport("", "", ""))
+                || request.getTo().equals(new Airport("", "", ""))
+        ) {
+            throw new NullPointerException();
+        }
+
         if (isFlightPresent(request)) {
             throw new IllegalStateException();
+        }
+
+        if (request.getFrom().getCity().toLowerCase().trim().equals(request.getTo().getCity().toLowerCase().trim())
+                && request.getFrom().getCountry().toLowerCase().trim().equals(request.getTo().getCountry().toLowerCase().trim())
+                && request.getFrom().getAirport().toLowerCase().trim().equals(request.getTo().getAirport().toLowerCase().trim())) {
+            throw new IllegalArgumentException();
+        }
+        if (request.getDepartureTime().equals(request.getArrivalTime())
+                || request.getDepartureTime().isAfter(request.getArrivalTime())) {
+            throw new IllegalArgumentException();
         }
 
 
@@ -26,12 +55,12 @@ class TripService {
                 request.getFrom(),
                 request.getTo(),
                 request.getCarrier(),
-                request.getDeparture(),
-                request.getArrival());
+                request.getDepartureTime(),
+                request.getArrivalTime());
         trips.add(trip);
         return trip;
-
     }
+
 
     private boolean isFlightPresent(AddTripRequest request) {
         for (Trip trip : trips) {
@@ -44,24 +73,9 @@ class TripService {
     }
 
     List<Trip> search(String from, String to) {
-
         return trips.stream()
                 .filter(trip -> isAirportMatching(trip.getFrom(), from) || isAirportMatching(trip.getTo(), to))
                 .collect(Collectors.toList());
-
-    }
-
-
-    List<Trip> isAnyNulls(Trip trip) {
-/*return trips.stream()
-        .filter(trip->)*/
-        return null;
-    }
-
-
-    List<Trip> findAll() {
-
-        return trips;
     }
 
     private boolean isAirportMatching(Airport airport, String search) {
@@ -77,7 +91,6 @@ class TripService {
             }
         }
         return false;
-
     }
 
     void clear() {
@@ -85,19 +98,41 @@ class TripService {
     }
 
     Trip findById(Long id) {
-        for (Trip trip : trips) {
-            if (trip.getId().equals(id)) {
-                return trip;
-            }
+        return trips.stream()
+                .filter(trip -> trip.getId().equals(id))
+                .findAny()
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    List<Trip> findFlights(FindTripRequest request) {
+        if (request.getFrom() == null
+                || request.getTo() == null
+                || request.getDeparture() == null
+                || request.getArrival() == null
+                || request.getFrom().equals(new Airport(null, null, null))
+                || request.getTo().equals(new Airport(null, null, null))
+                || request.getFrom().equals(new Airport("", "", ""))
+                || request.getTo().equals(new Airport("", "", ""))
+        ) {
+            throw new NullPointerException();
         }
-        return null;
+
+        if (request.getFrom().equals(request.getTo())) {
+            throw new IllegalStateException();
+        }
+        return trips.stream()
+                .filter(trip -> trip.getFrom().equals(request.getFrom())
+                        && trip.getTo().equals(request.getTo())
+                        && trip.getDepartureTime().toLocalDate().equals(request.getDeparture())
+                        && trip.getArrivalTime().toLocalDate().equals(request.getArrival()))
+                .collect(Collectors.toList());
     }
 
-    List<Trip> findRequest(FindTripRequest request) {
-        return null;
-    }
-
-    void deleteById(Long id) {
+    synchronized void deleteById(Long id) {
         trips.removeIf(trip -> id.equals(trip.getId()));
+    }
+
+    List<Trip> findAll() {
+        return trips;
     }
 }
