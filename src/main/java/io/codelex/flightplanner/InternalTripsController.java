@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/internal-api")
-public class InternalTripsController {
+class InternalTripsController {
 
     @Autowired
     private TripService tripService;
@@ -28,14 +28,8 @@ public class InternalTripsController {
     }
 
     @DeleteMapping("/flights/{id}")
-    public ResponseEntity<Void> deleteTripById(@PathVariable Long id) {
-        try {
-            tripService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException o_O) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
+    public void deleteTripById(@PathVariable Long id) {
+        tripService.deleteById(id);
     }
 
     @GetMapping("/flights/{id}")

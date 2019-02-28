@@ -6,13 +6,11 @@ import io.codelex.flightplanner.api.FindTripRequest;
 import io.codelex.flightplanner.api.Trip;
 import org.springframework.stereotype.Component;
 
-import java.time.DateTimeException;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import java.util.zip.DataFormatException;
+
 
 @Component
 class TripService {
@@ -21,17 +19,7 @@ class TripService {
 
     synchronized Trip addTrip(AddTripRequest request) {
 
-        if (request.getFrom() == null
-                || request.getTo() == null
-                || request.getDepartureTime() == null
-                || request.getArrivalTime() == null
-                || request.getCarrier() == null
-                || request.getCarrier().equals("")
-                || request.getFrom().equals(new Airport(null, null, null))
-                || request.getTo().equals(new Airport(null, null, null))
-                || request.getFrom().equals(new Airport("", "", ""))
-                || request.getTo().equals(new Airport("", "", ""))
-        ) {
+        if (isAddRequestFieldsInvalid(request) || isAirportInvalid(request.getFrom()) || isAirportInvalid(request.getTo())) {
             throw new NullPointerException();
         }
 
@@ -49,7 +37,6 @@ class TripService {
             throw new IllegalArgumentException();
         }
 
-
         Trip trip = new Trip(
                 sequence++,
                 request.getFrom(),
@@ -61,6 +48,20 @@ class TripService {
         return trip;
     }
 
+    private boolean isRequestFieldsInvalid(FindTripRequest request) {
+        return request.getFrom() == null
+                || request.getTo() == null
+                || request.getDeparture() == null
+                || request.getArrival() == null;
+    }
+
+    private boolean isAddRequestFieldsInvalid(AddTripRequest request) {
+        return request.getFrom() == null
+                || request.getTo() == null
+                || request.getCarrier().length() == 0
+                || request.getDepartureTime() == null
+                || request.getArrivalTime() == null;
+    }
 
     private boolean isFlightPresent(AddTripRequest request) {
         for (Trip trip : trips) {
@@ -105,14 +106,7 @@ class TripService {
     }
 
     List<Trip> findFlights(FindTripRequest request) {
-        if (request.getFrom() == null
-                || request.getTo() == null
-                || request.getDeparture() == null
-                || request.getArrival() == null
-                || request.getFrom().equals(new Airport(null, null, null))
-                || request.getTo().equals(new Airport(null, null, null))
-                || request.getFrom().equals(new Airport("", "", ""))
-                || request.getTo().equals(new Airport("", "", ""))
+        if (isRequestFieldsInvalid(request) || isAirportInvalid(request.getFrom()) || isAirportInvalid(request.getTo())
         ) {
             throw new NullPointerException();
         }
@@ -126,6 +120,12 @@ class TripService {
                         && trip.getDepartureTime().toLocalDate().equals(request.getDeparture())
                         && trip.getArrivalTime().toLocalDate().equals(request.getArrival()))
                 .collect(Collectors.toList());
+    }
+
+    private boolean isAirportInvalid(Airport airport) {
+        return airport.getAirport().length() == 0
+                || airport.getCountry().length() == 0
+                || airport.getCity().length() == 0;
     }
 
     synchronized void deleteById(Long id) {

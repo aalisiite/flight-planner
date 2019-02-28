@@ -17,10 +17,10 @@ public class AddTripRequest {
 
     @JsonCreator
     public AddTripRequest(@JsonProperty("from") Airport from,
-                          @JsonProperty("to") Airport to,
-                          @JsonProperty("carrier") String carrier,
-                          @JsonProperty("departureTime") LocalDateTime departure,
-                          @JsonProperty("arrivalTime") LocalDateTime arrival) {
+                   @JsonProperty("to") Airport to,
+                   @JsonProperty("carrier") String carrier,
+                   @JsonProperty("departureTime") LocalDateTime departure,
+                   @JsonProperty("arrivalTime") LocalDateTime arrival) {
         this.from = from;
         this.to = to;
         this.carrier = carrier;

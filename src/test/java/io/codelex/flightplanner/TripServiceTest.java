@@ -105,7 +105,7 @@ class TripServiceTest {
     void should_be_able_to_delete_all_flights() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         service.clear();
         //then
@@ -129,7 +129,7 @@ class TripServiceTest {
 
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("RIX", null);
         //then
@@ -140,7 +140,7 @@ class TripServiceTest {
     void should_find_flight_where_full_country_from_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("Latvia", null);
         //then
@@ -152,7 +152,7 @@ class TripServiceTest {
     void should_find_flight_where_full_city_from_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("Riga", null);
         //then
@@ -163,7 +163,7 @@ class TripServiceTest {
     void should_find_flight_where_partial_airport_name_from_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("Riga", null);
         //then
@@ -174,10 +174,12 @@ class TripServiceTest {
     void should_find_flight_where_partial_country_from_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("Lat", null);
         //then
+
+
         Assertions.assertEquals(1, trips.size());
     }
 
@@ -185,7 +187,7 @@ class TripServiceTest {
     void should_find_flight_where_partial_city_from_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("Rig", null);
         //then
@@ -196,7 +198,7 @@ class TripServiceTest {
     void should_find_flight_where_partial_lowercase_airport_name_from_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("ri", null);
         //then
@@ -207,7 +209,7 @@ class TripServiceTest {
     void should_find_flight_where_partial_uppercase_country_from_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("LAT", null);
         //then
@@ -218,7 +220,7 @@ class TripServiceTest {
     void should_find_flight_where_partial_uppercase_city_from_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("RI", null);
         //then
@@ -229,7 +231,7 @@ class TripServiceTest {
     void should_find_flight_where_airport_name_from_with_space_at_the_end_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("RIX ", null);
         //then
@@ -240,7 +242,7 @@ class TripServiceTest {
     void should_find_flight_where_partial_country_from_with_space_at_the_end_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("Latvia ", null);
         //then
@@ -251,7 +253,7 @@ class TripServiceTest {
     void should_find_flight_where_partial_city_from_with_space_at_the_end_passed() {
         //given
         AddTripRequest request = createRequest();
-        Trip trip = service.addTrip(request);
+        service.addTrip(request);
         //when
         List<Trip> trips = service.search("RIX ", null);
         //then
@@ -321,36 +323,24 @@ class TripServiceTest {
         //then
         Assertions.assertEquals(trips.size(), 0);
     }
-
-    @Test
-    void should_delete_trip_by_id() {
-        //given
-        AddTripRequest request = createRequest();
-
-        //when
-        Trip getFlightById = service.addTrip(request);
-        Trip result = service.findById(getFlightById.getId());
-    }
-
+    
     private AddTripRequest createRequest() {
-        AddTripRequest request = new AddTripRequest(
+        return new AddTripRequest(
                 new Airport("Latvia", "Riga", "RIX"),
                 new Airport("Sweden", "Stockholm", "ARN"),
                 "Ryanair",
                 LocalDateTime.now(),
                 LocalDateTime.now().plusHours(5)
         );
-        return request;
     }
 
     private FindTripRequest createRequestOther() {
-        FindTripRequest request = new FindTripRequest(
+        return new FindTripRequest(
                 new Airport("Latvia", "Riga", "RIX"),
                 new Airport("Sweden", "Stockholm", "ARN"),
                 LocalDate.now(),
                 LocalDate.now().plusDays(10)
         );
-        return request;
     }
 }
 

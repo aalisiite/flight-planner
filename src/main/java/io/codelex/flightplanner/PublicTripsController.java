@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
-public class PublicTripsController {
+class PublicTripsController {
 
     @Autowired
     private TripService tripService;
