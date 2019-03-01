@@ -34,8 +34,6 @@ class PublicTripsControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
-    private TripService service;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 

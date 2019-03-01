@@ -314,7 +314,7 @@ class TripServiceTest {
         AddTripRequest request = createRequest();
         service.addTrip(request);
         //when
-        
+
         //then
         Assertions.assertThrows(IllegalStateException.class, () ->
                 service.findFlights(new FindTripRequest(
@@ -333,14 +333,6 @@ class TripServiceTest {
                 LocalDateTime.now().plusHours(5)
         );
     }
-
-    private FindTripRequest createRequestOther() {
-        return new FindTripRequest(
-                new Airport("Latvia", "Riga", "RIX"),
-                new Airport("Sweden", "Stockholm", "ARN"),
-                LocalDate.now(),
-                LocalDate.now().plusDays(10)
-        );
-    }
+    
 }
 
