@@ -74,8 +74,9 @@ class RepositoryFlightServiceTest {
         //then
         Assertions.assertEquals(0, flights.size());
     }
+
     @Test
-    void should_search_to_if_from_is_empty(){
+    void should_search_to_if_from_is_empty() {
         //given
         Mockito.when(flightRecordRepository.searchFrom("")).thenReturn(new ArrayList<>());
         //when

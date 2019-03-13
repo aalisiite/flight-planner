@@ -12,15 +12,15 @@ public class AirportRecord {
     private String airport;
     private String city;
     private String country;
-    
-    public AirportRecord(){
-        
-    }
+
 
     public AirportRecord(String airport, String city, String country) {
         this.airport = airport;
         this.city = city;
         this.country = country;
+    }
+
+    public AirportRecord() {
     }
 
     public String getAirport() {
