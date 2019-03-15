@@ -30,11 +30,6 @@ class RepositoryFlightService implements FlightService {
     @Override
     public Flight addTrip(AddFlightRequest request) {
 
-       /* if (isAddRequestFieldsInvalid(request) || isAirportInvalid(request.getFrom()) || isAirportInvalid(request.getTo())) {
-            throw new NullPointerException();
-        }*/
-       
-
         if (flightRecordRepository.isFlightPresent(request.getFrom().getAirport(), request.getTo().getAirport(), request.getDepartureTime(), request.getArrivalTime(), request.getCarrier())) {
             throw new IllegalStateException();
         }
@@ -52,22 +47,7 @@ class RepositoryFlightService implements FlightService {
         flightRecord = flightRecordRepository.save(flightRecord);
         return toTrip.apply(flightRecord);
     }
-
-   /* private boolean isRequestFieldsInvalid(FindFlightRequest request) {
-        return request.getFrom() == null
-                || request.getTo() == null
-                || request.getDeparture() == null
-                || request.getArrival() == null;
-    }
-
-    private boolean isAddRequestFieldsInvalid(AddFlightRequest request) {
-        return request.getFrom() == null
-                || request.getTo() == null
-                || request.getCarrier().length() == 0
-                || request.getDepartureTime() == null
-                || request.getArrivalTime() == null;
-    }*/
-
+    
     private AirportRecord createOrGetAirport(Airport airport) {
         return airportRecordRepository.findById(airport.getAirport())
                 .orElseGet(() -> {
@@ -79,12 +59,6 @@ class RepositoryFlightService implements FlightService {
                     return airportRecordRepository.save(created);
                 });
     }
-
-    /*private boolean isAirportInvalid(Airport airport) {
-        return airport.getAirport().length() == 0
-                || airport.getCountry().length() == 0
-                || airport.getCity().length() == 0;
-    }*/
 
     @Override
     public List<Flight> search(String from, String to) {
@@ -123,11 +97,6 @@ class RepositoryFlightService implements FlightService {
 
     @Override
     public List<Flight> findFlight(FindFlightRequest request) {
-
-        /*if (isRequestFieldsInvalid(request) || isAirportInvalid(request.getFrom()) || isAirportInvalid(request.getTo())
-        ) {
-            throw new NullPointerException();
-        }*/
 
         if (request.getFrom().getAirport().equals(request.getTo().getAirport())) {
             throw new IllegalArgumentException();
