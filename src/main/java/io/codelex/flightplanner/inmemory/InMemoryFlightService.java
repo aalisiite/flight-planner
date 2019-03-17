@@ -1,9 +1,11 @@
-package io.codelex.flightplanner;
+package io.codelex.flightplanner.inmemory;
 
-import io.codelex.flightplanner.api.AddTripRequest;
+import io.codelex.flightplanner.FlightService;
+import io.codelex.flightplanner.api.AddFlightRequest;
 import io.codelex.flightplanner.api.Airport;
-import io.codelex.flightplanner.api.FindTripRequest;
-import io.codelex.flightplanner.api.Trip;
+import io.codelex.flightplanner.api.FindFlightRequest;
+import io.codelex.flightplanner.api.Flight;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,11 +16,13 @@ import java.util.stream.Collectors;
 
 
 @Component
-class TripService {
-    private final List<Trip> trips = new ArrayList<>();
+@ConditionalOnProperty(prefix = "flight-planner", name = "store-type", havingValue = "in-memory")
+class InMemoryFlightService implements FlightService {
+    private final List<Flight> flights = new ArrayList<>();
     private AtomicLong sequence = new AtomicLong(1L);
 
-    synchronized Trip addTrip(AddTripRequest request) {
+    @Override
+    synchronized public Flight addTrip(AddFlightRequest request) {
 
         if (isAddRequestFieldsInvalid(request) || isAirportInvalid(request.getFrom()) || isAirportInvalid(request.getTo())) {
             throw new NullPointerException();
@@ -36,25 +40,25 @@ class TripService {
             throw new IllegalArgumentException();
         }
 
-        Trip trip = new Trip(
+        Flight flight = new Flight(
                 sequence.incrementAndGet(),
                 request.getFrom(),
                 request.getTo(),
                 request.getCarrier(),
                 request.getDepartureTime(),
                 request.getArrivalTime());
-        trips.add(trip);
-        return trip;
+        flights.add(flight);
+        return flight;
     }
 
-    private boolean isRequestFieldsInvalid(FindTripRequest request) {
+    private boolean isRequestFieldsInvalid(FindFlightRequest request) {
         return request.getFrom() == null
                 || request.getTo() == null
                 || request.getDeparture() == null
                 || request.getArrival() == null;
     }
 
-    private boolean isAddRequestFieldsInvalid(AddTripRequest request) {
+    private boolean isAddRequestFieldsInvalid(AddFlightRequest request) {
         return request.getFrom() == null
                 || request.getTo() == null
                 || request.getCarrier().length() == 0
@@ -62,22 +66,24 @@ class TripService {
                 || request.getArrivalTime() == null;
     }
 
-    private boolean isFlightPresent(AddTripRequest request) {
-        for (Trip trip : trips) {
-            if (trip.getFrom().equals(request.getFrom())
-                    && trip.getTo().equals(request.getTo())) {
+    private boolean isFlightPresent(AddFlightRequest request) {
+        for (Flight flight : flights) {
+            if (flight.getFrom().equals(request.getFrom())
+                    && flight.getTo().equals(request.getTo())) {
                 return true;
             }
         }
         return false;
     }
 
-    List<Trip> search(String from, String to) {
-        return trips.stream()
+    @Override
+    public List<Flight> search(String from, String to) {
+
+        return flights.stream()
                 .filter(trip -> isAirportMatching(trip.getFrom(), from) || isAirportMatching(trip.getTo(), to))
                 .collect(Collectors.toList());
     }
-
+    
     private boolean isAirportMatching(Airport airport, String search) {
         if (search != null && search.length() > 0) {
             if (airport.getCountry().toLowerCase().contains(search.toLowerCase().trim())) {
@@ -93,18 +99,21 @@ class TripService {
         return false;
     }
 
-    void clear() {
-        trips.clear();
+    @Override
+    public void clear() {
+        flights.clear();
     }
 
-    Trip findById(Long id) {
-        return trips.stream()
+    @Override
+    public Flight findById(Long id) {
+        return flights.stream()
                 .filter(trip -> trip.getId().equals(id))
                 .findAny()
                 .orElseThrow(NoSuchElementException::new);
     }
 
-    List<Trip> findFlights(FindTripRequest request) {
+    @Override
+    public List<Flight> findFlight(FindFlightRequest request) {
         if (isRequestFieldsInvalid(request) || isAirportInvalid(request.getFrom()) || isAirportInvalid(request.getTo())
         ) {
             throw new NullPointerException();
@@ -113,7 +122,7 @@ class TripService {
         if (request.getFrom().equals(request.getTo())) {
             throw new IllegalStateException();
         }
-        return trips.stream()
+        return flights.stream()
                 .filter(trip -> trip.getFrom().equals(request.getFrom())
                         && trip.getTo().equals(request.getTo())
                         && trip.getDepartureTime().toLocalDate().equals(request.getDeparture())
@@ -127,11 +136,8 @@ class TripService {
                 || airport.getCity().length() == 0;
     }
 
-    synchronized void deleteById(Long id) {
-        trips.removeIf(trip -> id.equals(trip.getId()));
-    }
-
-    List<Trip> findAll() {
-        return trips;
+    @Override
+    synchronized public void deleteById(Long id) {
+        flights.removeIf(trip -> id.equals(trip.getId()));
     }
 }

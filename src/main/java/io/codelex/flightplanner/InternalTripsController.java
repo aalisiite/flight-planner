@@ -1,12 +1,13 @@
 package io.codelex.flightplanner;
 
-import io.codelex.flightplanner.api.AddTripRequest;
-import io.codelex.flightplanner.api.Trip;
+import io.codelex.flightplanner.api.AddFlightRequest;
+import io.codelex.flightplanner.api.Flight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -14,12 +15,16 @@ import java.util.NoSuchElementException;
 class InternalTripsController {
 
     @Autowired
-    private TripService tripService;
+    private FlightService flightService;
 
     @PutMapping("/flights")
-    public ResponseEntity<Trip> addTrip(@RequestBody AddTripRequest request) {
+    public ResponseEntity<Flight> addTrip(@Valid @RequestBody AddFlightRequest request) {
         try {
-            return new ResponseEntity<>(tripService.addTrip(request), HttpStatus.CREATED);
+            if (request.getDepartureTime().equals(request.getArrivalTime())
+                    || request.getDepartureTime().isAfter(request.getArrivalTime())) {
+                throw new IllegalArgumentException();
+            }
+            return new ResponseEntity<>(flightService.addTrip(request), HttpStatus.CREATED);
         } catch (NullPointerException | IllegalArgumentException o_o) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (IllegalStateException k) {
@@ -29,13 +34,13 @@ class InternalTripsController {
 
     @DeleteMapping("/flights/{id}")
     public void deleteTripById(@PathVariable Long id) {
-        tripService.deleteById(id);
+        flightService.deleteById(id);
     }
 
     @GetMapping("/flights/{id}")
-    public ResponseEntity<Trip> findDeletedTip(@PathVariable Long id) {
+    public ResponseEntity<Flight> findDeletedTip(@PathVariable Long id) {
         try {
-            return new ResponseEntity<>(tripService.findById(id), HttpStatus.OK);
+            return new ResponseEntity<>(flightService.findById(id), HttpStatus.OK);
         } catch (NoSuchElementException k) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -43,7 +48,7 @@ class InternalTripsController {
 
     @PostMapping("/clear")
     public void deleteAll() {
-        tripService.clear();
+        flightService.clear();
     }
 
 }

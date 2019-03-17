@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.codelex.flightplanner.api.Airport;
-import io.codelex.flightplanner.api.FindTripRequest;
+import io.codelex.flightplanner.api.FindFlightRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ class PublicTripsControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private TripService service;
+    private FlightService service;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -70,7 +70,7 @@ class PublicTripsControllerTest {
     @Test
     void should_get_400_when_from_and_to_are_equal() throws Exception {
         //given
-        FindTripRequest request = new FindTripRequest(
+        FindFlightRequest request = new FindFlightRequest(
                 new Airport("Latvia", "Riga", "RIX"),
                 new Airport("Latvia", "Riga", "RIX"),
                 LocalDate.now(),

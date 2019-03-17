@@ -7,5 +7,5 @@ pool:
 steps:
   - script: |
       docker build -t flight-planner:latest .
-      docker run --rm -u root flight-planner:latest build
+      docker run --rm -u root flight-planner:latest build -v $PWD:$PWD -w $PWD -v /var/run/docker.sock:/var/run/docker.sock
     displayName: 'Build'

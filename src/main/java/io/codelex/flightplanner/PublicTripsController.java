@@ -1,12 +1,14 @@
 package io.codelex.flightplanner;
 
-import io.codelex.flightplanner.api.FindTripRequest;
-import io.codelex.flightplanner.api.Trip;
+import io.codelex.flightplanner.api.FindFlightRequest;
+import io.codelex.flightplanner.api.Flight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -15,32 +17,34 @@ import java.util.NoSuchElementException;
 class PublicTripsController {
 
     @Autowired
-    private TripService tripService;
+    private FlightService flightService;
 
     @GetMapping("/flights/search")
-    public List<Trip> search(String from, String to) {
-        return tripService.search(from, to);
+    public List<Flight> search(String from, String to) {
+        if (from == null || to == null) {
+            return Collections.emptyList();
+        } else {
+            return flightService.search(from, to);
+        }
     }
 
     @PostMapping("/flights")
-    public ResponseEntity<List<Trip>> findTrip(@RequestBody FindTripRequest request) {
+    public ResponseEntity<List<Flight>> findTrip(@Valid @RequestBody FindFlightRequest request) {
         try {
-            return new ResponseEntity<>(tripService.findFlights(request), HttpStatus.OK);
-        } catch (NullPointerException | IllegalStateException o_O) {
+            return new ResponseEntity<>(flightService.findFlight(request), HttpStatus.OK);
+        } catch (NullPointerException | IllegalStateException | IllegalArgumentException o_O) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @GetMapping("/flights/{id}")
-    public ResponseEntity<Trip> findTripById(@PathVariable Long id) {
+    public ResponseEntity<Flight> findTripById(@PathVariable Long id) {
         try {
-            return new ResponseEntity<>(tripService.findById(id), HttpStatus.OK);
+            return new ResponseEntity<>(flightService.findById(id), HttpStatus.OK);
         } catch (NoSuchElementException o) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 }
 
 

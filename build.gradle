@@ -22,14 +22,20 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.4.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.postgresql:postgresql:42.2.5'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
     testImplementation 'org.junit.platform:junit-platform-commons:1.4.0'
-    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
+    testImplementation 'org.testcontainers:postgresql:1.10.6'
+    testImplementation 'org.testcontainers:junit-jupiter:1.10.6'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
+    testCompile "org.testcontainers:testcontainers:1.10.6"
+    implementation 'org.liquibase:liquibase-core:3.6.3'
+
 }
+
 test {
     useJUnitPlatform()
 }
