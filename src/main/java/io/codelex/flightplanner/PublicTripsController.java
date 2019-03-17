@@ -23,8 +23,6 @@ class PublicTripsController {
     public List<Flight> search(String from, String to) {
         if (from == null || to == null) {
             return Collections.emptyList();
-        } else if (from.equals("") || to.equals("")) {
-            return flightService.search(from, to);
         } else {
             return flightService.search(from, to);
         }
