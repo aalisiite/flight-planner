@@ -54,5 +54,4 @@ public interface FlightRecordRepository extends JpaRepository<FlightRecord, Long
                             @Param("departureFrom") LocalDateTime departureTime,
                             @Param("arrivalFrom") LocalDateTime arrivalTime,
                             @Param("carrier") String carrier);
-
 }

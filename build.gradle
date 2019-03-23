@@ -30,9 +30,11 @@ dependencies {
     testImplementation 'org.junit.platform:junit-platform-commons:1.4.0'
     testImplementation 'org.testcontainers:postgresql:1.10.6'
     testImplementation 'org.testcontainers:junit-jupiter:1.10.6'
+    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '2.22.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
     testCompile "org.testcontainers:testcontainers:1.10.6"
     implementation 'org.liquibase:liquibase-core:3.6.3'
+    implementation 'com.github.ben-manes.caffeine:caffeine:2.7.0'
 
 }
 

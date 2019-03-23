@@ -2,7 +2,6 @@ package io.codelex.flightplanner;
 
 import io.codelex.flightplanner.api.AddFlightRequest;
 import io.codelex.flightplanner.api.Flight;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,11 @@ import java.util.NoSuchElementException;
 @RequestMapping("/internal-api")
 class InternalTripsController {
 
-    @Autowired
     private FlightService flightService;
+
+    public InternalTripsController(FlightService flightService) {
+        this.flightService = flightService;
+    }
 
     @PutMapping("/flights")
     public ResponseEntity<Flight> addTrip(@Valid @RequestBody AddFlightRequest request) {
