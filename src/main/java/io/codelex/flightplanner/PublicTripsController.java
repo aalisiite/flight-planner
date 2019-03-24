@@ -2,7 +2,7 @@ package io.codelex.flightplanner;
 
 import io.codelex.flightplanner.api.FindFlightRequest;
 import io.codelex.flightplanner.api.Flight;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.codelex.flightplanner.api.FlightWithWeather;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +16,13 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api")
 class PublicTripsController {
 
-    @Autowired
     private FlightService flightService;
+    private FlightDecorator flightDecorator;
+
+    public PublicTripsController(FlightService flightService, FlightDecorator flightDecorator) {
+        this.flightService = flightService;
+        this.flightDecorator = flightDecorator;
+    }
 
     @GetMapping("/flights/search")
     public List<Flight> search(String from, String to) {
@@ -29,9 +34,9 @@ class PublicTripsController {
     }
 
     @PostMapping("/flights")
-    public ResponseEntity<List<Flight>> findTrip(@Valid @RequestBody FindFlightRequest request) {
+    public ResponseEntity<List<FlightWithWeather>> findTrip(@Valid @RequestBody FindFlightRequest request) {
         try {
-            return new ResponseEntity<>(flightService.findFlight(request), HttpStatus.OK);
+            return new ResponseEntity<>(flightDecorator.findFlight(request), HttpStatus.OK);
         } catch (NullPointerException | IllegalStateException | IllegalArgumentException o_O) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

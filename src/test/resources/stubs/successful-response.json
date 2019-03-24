@@ -1,0 +1,76 @@
+{
+  "location": {
+    "name": "Riga",
+    "region": "Riga",
+    "country": "Latvia",
+    "lat": 56.95,
+    "lon": 24.1,
+    "tz_id": "Europe/Riga",
+    "localtime_epoch": 1553339355,
+    "localtime": "2019-03-23 13:09"
+  },
+  "current": {
+    "last_updated_epoch": 1553338819,
+    "last_updated": "2019-03-23 13:00",
+    "temp_c": 10,
+    "temp_f": 50,
+    "is_day": 1,
+    "condition": {
+      "text": "Partly cloudy",
+      "icon": "//cdn.apixu.com/weather/64x64/day/116.png",
+      "code": 1003
+    },
+    "wind_mph": 17.4,
+    "wind_kph": 28.1,
+    "wind_degree": 190,
+    "wind_dir": "S",
+    "pressure_mb": 1021,
+    "pressure_in": 30.6,
+    "precip_mm": 0,
+    "precip_in": 0,
+    "humidity": 40,
+    "cloud": 75,
+    "feelslike_c": 6.7,
+    "feelslike_f": 44.1,
+    "vis_km": 10,
+    "vis_miles": 6,
+    "uv": 4,
+    "gust_mph": 20.8,
+    "gust_kph": 33.5
+  },
+  "forecast": {
+    "forecastday": [
+      {
+        "date": "2019-03-23",
+        "date_epoch": 1553299200,
+        "day": {
+          "maxtemp_c": 8.7,
+          "maxtemp_f": 47.7,
+          "mintemp_c": 0.7,
+          "mintemp_f": 33.3,
+          "avgtemp_c": 4.6,
+          "avgtemp_f": 40.2,
+          "maxwind_mph": 14.8,
+          "maxwind_kph": 23.8,
+          "totalprecip_mm": 1.7,
+          "totalprecip_in": 0.07,
+          "avgvis_km": 16,
+          "avgvis_miles": 9,
+          "avghumidity": 70,
+          "condition": {
+            "text": "Moderate or heavy rain shower",
+            "icon": "//cdn.apixu.com/weather/64x64/day/356.png",
+            "code": 1243
+          },
+          "uv": 2.2
+        },
+        "astro": {
+          "sunrise": "06:18 AM",
+          "sunset": "06:43 PM",
+          "moonrise": "10:05 PM",
+          "moonset": "07:41 AM"
+        }
+      }
+    ]
+  }
+}

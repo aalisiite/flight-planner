@@ -26,6 +26,8 @@ class RepositoryFlightService implements FlightService {
         this.flightRecordRepository = flightRecordRepository;
         this.airportRecordRepository = airportRecordRepository;
     }
+    
+    
 
     @Override
     public Flight addTrip(AddFlightRequest request) {
