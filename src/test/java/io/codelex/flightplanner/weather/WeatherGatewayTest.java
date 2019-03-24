@@ -84,5 +84,4 @@ class WeatherGatewayTest {
         assertFalse(response.isPresent());
 
     }
-
 }

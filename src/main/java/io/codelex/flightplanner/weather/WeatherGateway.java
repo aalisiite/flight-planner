@@ -20,8 +20,7 @@ public class WeatherGateway {
     private static final Logger log = LoggerFactory.getLogger(WeatherGateway.class);
     private final RestTemplate restTemplate = new RestTemplate();
     private final ApixuProperties props;
-
-
+    
     public WeatherGateway(ApixuProperties props) {
         this.props = props;
     }
