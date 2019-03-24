@@ -24,7 +24,6 @@ public class WeatherGateway {
 
     public WeatherGateway(ApixuProperties props) {
         this.props = props;
-
     }
 
     Optional<Weather> fetchForecast(String city, LocalDate date) {
@@ -42,13 +41,13 @@ public class WeatherGateway {
                     uri,
                     ForecastResponse.class);
             if (response == null) {
-
                 throw new IllegalStateException();
             }
+
             ForecastResponse.Day day = response.getForecast().getForecastDays().get(0).getDay();
             return Optional.of(new Weather(day.getAverageTemperature(), day.getTotalPrecipation(), day.getMaxWind(), day.getCondition().getText()));
         } catch (Exception o_O) {
-            log.warn("exception", "o_O");
+            log.warn("exception", o_O);
             return empty();
         }
     }

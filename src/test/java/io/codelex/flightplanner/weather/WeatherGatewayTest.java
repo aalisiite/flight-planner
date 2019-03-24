@@ -2,8 +2,7 @@ package io.codelex.flightplanner.weather;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.codelex.flightplanner.api.Weather;
-import org.junit.Rule;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.ResourceUtils;
@@ -18,25 +17,22 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WeatherGatewayTest {
-    @Rule
-    WireMockRule wireMock = new WireMockRule();
 
+    static WireMockRule wireMock = new WireMockRule();
     private WeatherGateway gateway;
     private LocalDate date = LocalDate.of(2019, 10, 2);
 
+    @BeforeAll
+    static void setupOnce() {
+        wireMock.start();
+    }
+
     @BeforeEach
     void setUp() {
-
-        wireMock.start();
         ApixuProperties props = new ApixuProperties();
         props.setApiUrl("http://localhost:" + wireMock.port());
         props.setApiKey("123");
         gateway = new WeatherGateway(props);
-    }
-
-    @AfterEach
-    void tearDown() {
-        wireMock.stop();
     }
 
     @Test
