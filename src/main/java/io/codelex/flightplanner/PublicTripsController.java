@@ -28,9 +28,8 @@ class PublicTripsController {
     public List<Flight> search(String from, String to) {
         if (from == null || to == null) {
             return Collections.emptyList();
-        } else {
-            return flightService.search(from, to);
         }
+        return flightService.search(from, to);
     }
 
     @PostMapping("/flights")
